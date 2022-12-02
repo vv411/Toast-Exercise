@@ -28,7 +28,7 @@ export default function Header() {
     setOpen(true);
     setToastData({
         ...data
-      })
+      });
   }
 
   const handleClose = () => {
@@ -37,12 +37,26 @@ export default function Header() {
 
   const handleLike = () => {
 
-    let result = {};
-    try {
-      saveLikedFormSubmission(toastData);
-    } catch (error) {
-      console.log(error);
+    setToastData(prev => ({
+      ...prev,
+      liked : true
+    }));
+
+    const attemptSaveForm = (maxAttempts  = 3) => {
+      saveLikedFormSubmission(toastData)
+      .then (res => res)
+      .catch (err => {
+        console.log(err);
+        if (maxAttempts > 0) {
+          attemptSaveForm (maxAttempts - 1);
+        } else {
+          console.log("Save failed");
+        }
+
+      })
     }
+
+    attemptSaveForm();
 
     setOpen(false);
   };

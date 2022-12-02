@@ -10,14 +10,21 @@ export default function Content() {
 
   useEffect(() => {
     let result = [];
-    try {
+
+    const attemptReadForm = (maxAttempts = 3) => {
       fetchLikedFormSubmissions()
       .then(res => setLikedSubmissions(res.formSubmissions))
-      .catch((err) => console.log(err));
-    } catch (error) {
-      console.log(error);
+      .catch(err => {
+        console.log(err);
+        if (maxAttempts > 0) {
+          attemptReadForm (maxAttempts - 1);
+        } else {
+          console.log("Read failed");
+        }
+      });
     }
 
+    attemptReadForm();
   })
 
   return (
@@ -30,7 +37,7 @@ export default function Content() {
         ))}
 
       </Typography>
-      
+
     </Box>
   );
 }
