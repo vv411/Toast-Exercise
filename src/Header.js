@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -10,11 +10,26 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import Snackbar from '@mui/material/Snackbar';
 
-import { createMockFormSubmission } from './service/mockServer';
+import { createMockFormSubmission , onMessage} from './service/mockServer';
 
 export default function Header() {
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [toastData, setToastData] = useState({});
+
+  useEffect(() => {
+    onMessage(getNewToastData);
+  }, []);
+
+  //callback function to pass to the mockServer
+  const getNewToastData = (obj) => {
+    const data = obj.data;
+
+    setOpen(true);
+    setToastData({
+        ...data
+      })
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -63,7 +78,7 @@ export default function Header() {
         open={open}
         autoHideDuration={10000}
         close={handleClose}
-        message={"test"}
+        message={`${toastData.firstName} ${toastData.lastName} ${toastData.email}`}
         action={action}
       />
 
