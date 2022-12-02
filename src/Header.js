@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import Snackbar from '@mui/material/Snackbar';
 
-import { createMockFormSubmission , onMessage} from './service/mockServer';
+import { createMockFormSubmission , onMessage, saveLikedFormSubmission} from './service/mockServer';
 
 export default function Header() {
 
@@ -35,8 +35,23 @@ export default function Header() {
     setOpen(false);
   };
 
+  const handleLike = () => {
+
+    let result = {};
+    try {
+      saveLikedFormSubmission(toastData);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setOpen(false);
+  };
+
   const action = (
     <React.Fragment>
+      <Button color="primary" size="small" onClick={handleLike}>
+        LIKE
+      </Button>
         <IconButton
           size="small"
           aria-label="close"
